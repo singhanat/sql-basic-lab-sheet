@@ -2,10 +2,6 @@
 
 ---
 
-## SECTION A — Basic 
-
----
-
 ### Q01 : สินค้าที่หมดสต็อก
 **Topic:** `Basic SQL Queries — SELECT / WHERE`
 
@@ -917,11 +913,6 @@ order by avg_freight desc;
 ```
 
 </details>
-
----
-
-## SECTION C — Advanced
-> Multi-join Aggregation + Subquery
 
 ---
 
