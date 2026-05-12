@@ -529,6 +529,53 @@ offset 10;
 
 ---
 
+### Challenge C : ระบบค้นหาสินค้าราคาแพง — หน้าที่ 2
+
+**Topic:** `ORDER BY · LIMIT · OFFSET`
+
+**Scenario:**
+
+ทีม dev กำลังสร้างหน้า **"สินค้าราคาสูง"** บนเว็บไซต์
+โดยระบบจะ **เรียงสินค้าจากราคาแพงที่สุด** และแสดงแบบ pagination **หน้าละ 5 รายการ**
+
+ตอนนี้ผู้ใช้กดไปที่ **หน้าที่ 2** แล้ว
+
+**Task:**
+
+แสดง `product_name` และ `unit_price` ของสินค้า
+**อันดับที่ 6–10** เมื่อเรียงตาม `unit_price` จากมากไปน้อย
+(หน้า 2 ของ pagination ที่หน้าละ 5 รายการ)
+
+**Sample Data:**
+
+*Table: `products`*
+
+| product_id | product_name | unit_price |
+| --- | --- | --- |
+| 38 | Côte de Blaye | 263.50 |
+| 29 | Thüringer Rostbratwurst | 123.79 |
+| 9 | Mishi Kobe Niku | 97.00 |
+| 20 | Sir Rodney's Marmalade | 81.00 |
+| 18 | Carnarvon Tigers | 62.50 |
+| 59 | Raclette Courdavault | 55.00 |
+| 51 | Manjimup Dried Apples | 53.00 |
+| 62 | Tarte au sucre | 49.30 |
+| 43 | Ipoh Coffee | 46.00 |
+| 28 | Rössle Sauerkraut | 45.60 |
+| ... | ... | ... |
+
+**Expected Output:**
+
+| product_name | unit_price |
+| --- | --- |
+| Raclette Courdavault | 55.00 |
+| Manjimup Dried Apples | 53.00 |
+| Tarte au sucre | 49.30 |
+| Ipoh Coffee | 46.00 |
+| Rössle Sauerkraut | 45.60 |
+
+---
+
 
 ### Q10 : รายการสินค้าพร้อมชื่อ Category
 **Topic:** `JOIN — INNER JOIN`
