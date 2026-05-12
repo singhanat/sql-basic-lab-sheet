@@ -1273,3 +1273,75 @@ order by full_name, month;
 ```
 
 </details>
+
+---
+
+### Challenge F : Leaderboard พนักงานประจำปี
+
+**Level:** `Advanced — Combined` &nbsp;|&nbsp; **Topic:** `COUNT · SUM · AVG · HAVING · Multi-column GROUP BY`
+
+**Scenario:**
+
+ผู้บริหารต้องการ **"Employee Leaderboard"** ประจำปี 1997
+ที่รวมทุก metric ไว้ในตารางเดียว เพื่อประกอบการพิจารณาโบนัส
+
+โดยต้องการเห็น **ทุก metric** ต่อไปนี้ต่อพนักงาน 1 คน:
+
+| Column | ความหมาย |
+| --- | --- |
+| `full_name` | ชื่อ + นามสกุลพนักงาน |
+| `order_count` | จำนวน order ที่รับในปี 1997 |
+| `total_revenue` | ยอดขายรวม (revenue formula) |
+| `avg_order_revenue` | ยอดขายเฉลี่ยต่อ order |
+| `avg_freight` | ค่าขนส่งเฉลี่ยต่อ order |
+| `best_month` | เดือนที่มียอดขายสูงสุด (1–12) |
+
+และแสดง **เฉพาะพนักงานที่มี order_count ≥ 70** ในปีนั้น
+เรียงตาม `total_revenue` จากมากไปน้อย
+
+**Task:**
+
+แสดง `full_name`, `order_count`, `total_revenue`, `avg_order_revenue`, `avg_freight` และ `best_month`
+ของพนักงานที่มี order_count ≥ 70 ในปี 1997 เรียงตาม `total_revenue` desc
+
+**Sample Data:**
+
+*Table: `employees`*
+
+| employee_id | first_name | last_name |
+| --- | --- | --- |
+| 1 | Nancy | Davolio |
+| 2 | Andrew | Fuller |
+| 3 | Janet | Leverling |
+| 4 | Margaret | Peacock |
+
+*Table: `orders`*
+
+| order_id | employee_id | order_date | freight |
+| --- | --- | --- | --- |
+| 10400 | 1 | 1997-01-01 | 83.93 |
+| 10410 | 3 | 1997-01-14 | 2.40 |
+| 10420 | 4 | 1997-02-03 | 44.12 |
+| 10500 | 1 | 1997-04-12 | 42.68 |
+| ... | ... | ... | ... |
+
+*Table: `order_details`*
+
+| order_id | product_id | quantity | unit_price | discount |
+| --- | --- | --- | --- | --- |
+| 10400 | 1 | 12 | 18.00 | 0.0 |
+| 10400 | 22 | 20 | 21.00 | 0.0 |
+| 10410 | 33 | 49 | 2.00 | 0.0 |
+| ... | ... | ... | ... | ... |
+
+**Expected Output** (ค่าสมมติ):
+
+| full_name | order_count | total_revenue | avg_order_revenue | avg_freight | best_month |
+| --- | --- | --- | --- | --- | --- |
+| Margaret Peacock | 81 | 232890.85 | 2875.19 | 78.34 | 4 |
+| Janet Leverling | 71 | 198390.71 | 2794.94 | 68.12 | 3 |
+| Nancy Davolio | 73 | 192107.72 | 2631.61 | 62.77 | 9 |
+
+> หมายเหตุ: ตัวเลขเป็นค่าสมมติ — ค่าจริงขึ้นกับ database
+
+---
