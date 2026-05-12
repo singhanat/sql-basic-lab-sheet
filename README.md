@@ -176,6 +176,60 @@ order by order_date;
 
 ---
 
+### Challenge A : ลูกค้า VIP ที่สั่งของในช่วงปลายปี 1997
+
+**Topic:** `WHERE · DISTINCT · LIKE · BETWEEN`
+
+**Scenario:**
+
+ฝ่ายขายต้องการจัดทำรายงาน **"ลูกค้าที่น่าสนใจ"** ในช่วงโค้งสุดท้ายของปี 1997
+โดยมีเงื่อนไขทั้งหมดดังนี้
+
+1. เป็นช่วง **ไตรมาส 4 ของปี 1997** (1 ตุลาคม – 31 ธันวาคม 1997)
+2. ลูกค้ามาจาก **ประเทศในกลุ่ม Americas** ได้แก่ USA, Canada, Brazil, Mexico, Argentina, Venezuela
+3. ชื่อบริษัท (**company_name**) ต้องมีคำว่า `'the'` หรือขึ้นต้นด้วยตัว `'A'` (เช็กแบบ case-insensitive)
+4. แสดงเฉพาะ **customer_id ที่ไม่ซ้ำกัน** พร้อม company_name และ country
+
+**Task:**
+
+แสดง `customer_id`, `company_name` และ `country` ของลูกค้าที่ตรงเงื่อนไขทั้งหมด
+เรียงตาม `country` ก่อน แล้วตาม `company_name`
+
+**Sample Data:**
+
+*Table: `customers`*
+
+| customer_id | company_name | country |
+| --- | --- | --- |
+| ALFKI | Alfreds Futterkiste | Germany |
+| ANATR | Ana Trujillo Emparedados | Mexico |
+| THEBI | The Big Cheese | USA |
+| RANCH | Rancho grande | Argentina |
+| OLDWO | Old World Delicatessen | USA |
+| GREAL | Great Lakes Food Market | USA |
+
+*Table: `orders`*
+
+| order_id | customer_id | order_date |
+| --- | --- | --- |
+| 10869 | THEBI | 1997-02-04 |
+| 10948 | GREAL | 1997-11-19 |
+| 10827 | THEBI | 1997-12-06 |
+| 10960 | RANCH | 1997-10-03 |
+| 10977 | ANATR | 1997-03-15 |
+| 10987 | OLDWO | 1997-12-20 |
+
+**Expected Output:**
+
+| customer_id | company_name | country |
+| --- | --- | --- |
+| RANCH | Rancho grande | Argentina |
+| GREAL | Great Lakes Food Market | USA |
+| THEBI | The Big Cheese | USA |
+
+> หมายเหตุ: OLDWO ตกรอบเพราะชื่อไม่ขึ้นต้นด้วย A และไม่มีคำว่า 'the' · ANATR ตกรอบเพราะ order_date ไม่อยู่ใน Q4
+
+---
 
 ### Q05 : ชื่อพนักงานตัวพิมพ์ใหญ่
 **Topic:** `Functions — String`
