@@ -744,6 +744,65 @@ order by o.order_date desc;
 
 ---
 
+### Challenge D : รายงานพนักงาน — ยอดขาย vs ลูกค้าที่ดูแล
+
+**Topic:** `INNER JOIN · LEFT JOIN · Multiple JOINs`
+
+**Scenario:**
+
+ฝ่าย HR ต้องการรายงาน **"ภาพรวมพนักงาน"** ที่รวมข้อมูล 3 มิติเข้าด้วยกัน
+
+1. **ชื่อพนักงาน** และ **ชื่อผู้จัดการ** ของพนักงานคนนั้น (self-reference — พนักงานบางคนไม่มีผู้จัดการ)
+2. **จำนวน order** ที่พนักงานคนนั้นรับ
+3. **จำนวนลูกค้า (unique)** ที่พนักงานคนนั้นเคยดูแล
+
+โดยต้องแสดง **พนักงานทุกคน** แม้ยังไม่เคยรับ order เลย
+
+**Task:**
+
+แสดง `employee_name` (first + last), `manager_name` (first + last ของผู้จัดการ — ถ้าไม่มีให้แสดง `'No Manager'`),
+`order_count` และ `customer_count`
+
+เรียงตาม `order_count` จากมากไปน้อย
+
+**Sample Data:**
+
+*Table: `employees`*
+
+| employee_id | first_name | last_name | reports_to |
+| --- | --- | --- | --- |
+| 1 | Nancy | Davolio | 2 |
+| 2 | Andrew | Fuller | NULL |
+| 3 | Janet | Leverling | 2 |
+| 4 | Margaret | Peacock | 2 |
+| 5 | Steven | Buchanan | 2 |
+
+*Table: `orders`*
+
+| order_id | employee_id | customer_id |
+| --- | --- | --- |
+| 10248 | 5 | VINET |
+| 10249 | 6 | TOMSP |
+| 10250 | 4 | HANAR |
+| 10251 | 3 | VICTE |
+| 10252 | 4 | SUPRD |
+| 10253 | 3 | HANAR |
+
+**Expected Output:**
+
+| employee_name | manager_name | order_count | customer_count |
+| --- | --- | --- | --- |
+| Janet Leverling | Andrew Fuller | 127 | 89 |
+| Margaret Peacock | Andrew Fuller | 156 | 110 |
+| Nancy Davolio | Andrew Fuller | 123 | 88 |
+| Andrew Fuller | No Manager | 96 | 76 |
+| Steven Buchanan | Andrew Fuller | 42 | 35 |
+| ... | ... | ... | ... |
+
+> หมายเหตุ: ตัวเลขในตัวอย่างเป็นค่าสมมติเพื่ออธิบาย shape — ค่าจริงขึ้นกับ database
+
+---
+
 ### Q13 : สินค้าที่เคยถูกสั่งซื้อใน order ของลูกค้า VINET
 **Topic:** `Subquery — WHERE IN`
 
