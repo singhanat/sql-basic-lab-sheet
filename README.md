@@ -976,6 +976,83 @@ order by pc.product_count desc;
 
 ---
 
+### Challenge E : สินค้าขายดี เฉพาะ Category ที่ Active จริง ๆ
+
+**Topic:** `WHERE IN · Scalar Subquery · FROM clause`
+
+**Scenario:**
+
+ฝ่าย product ต้องการรายงาน **"สินค้าที่น่าลงทุน"** โดยมีเงื่อนไขทั้งหมดนี้
+
+1. สินค้าต้องอยู่ใน **category ที่ "active"** — คือ category ที่มีจำนวนสินค้า **มากกว่าค่าเฉลี่ย** ของทุก category
+2. สินค้านั้นต้องเคย **ถูกสั่งซื้อจริง** (ปรากฏใน `order_details` อย่างน้อย 1 ครั้ง)
+3. แสดง `product_name`, `category_name`, `unit_price` และ `times_ordered` (จำนวนครั้งที่ถูกสั่ง)
+
+เรียงตาม `times_ordered` จากมากไปน้อย
+
+**Task:**
+
+แสดง `product_name`, `category_name`, `unit_price` และ `times_ordered`
+ของสินค้าที่ตรงเงื่อนไขทั้งหมด เรียงตาม `times_ordered` desc
+
+**Sample Data:**
+
+*Table: `categories`*
+
+| category_id | category_name |
+| --- | --- |
+| 1 | Beverages |
+| 2 | Condiments |
+| 3 | Confections |
+| 4 | Dairy Products |
+
+*Table: `products`*
+
+| product_id | product_name | category_id | unit_price |
+| --- | --- | --- | --- |
+| 1 | Chai | 1 | 18.00 |
+| 2 | Chang | 1 | 19.00 |
+| 3 | Aniseed Syrup | 2 | 10.00 |
+| 11 | Queso Cabrales | 4 | 21.00 |
+| 38 | Côte de Blaye | 1 | 263.50 |
+
+*Table: `order_details` (ตัวอย่างบางส่วน)*
+
+| order_id | product_id | quantity |
+| --- | --- | --- |
+| 10248 | 11 | 12 |
+| 10248 | 42 | 10 |
+| 10249 | 14 | 9 |
+| 10250 | 41 | 10 |
+| 10250 | 51 | 35 |
+
+*จำนวนสินค้าต่อ category (ข้อมูลจริงใน Northwind):*
+
+| category_name | product_count | เทียบกับค่าเฉลี่ย (~9.6) |
+| --- | --- | --- |
+| Confections | 13 | มากกว่า |
+| Beverages | 12 | มากกว่า |
+| Condiments | 12 | มากกว่า |
+| Seafood | 12 | มากกว่า |
+| Dairy Products | 10 | มากกว่า |
+| Meat/Poultry | 6 | น้อยกว่า |
+| Produce | 5 | น้อยกว่า |
+| Grains/Cereals | 7 | น้อยกว่า |
+
+**Expected Output** (บางส่วน):
+
+| product_name | category_name | unit_price | times_ordered |
+| --- | --- | --- | --- |
+| Raclette Courdavault | Dairy Products | 55.00 | 54 |
+| Camembert Pierrot | Dairy Products | 34.00 | 51 |
+| Gorgonzola Telino | Dairy Products | 12.50 | 51 |
+| Chang | Beverages | 19.00 | 44 |
+| ... | ... | ... | ... |
+
+> หมายเหตุ: ตัวเลขในตัวอย่างเป็นค่าสมมติเพื่ออธิบาย shape — ค่าจริงขึ้นกับ database
+
+---
+
 ### Q16 : จำนวน Order ต่อลูกค้า
 **Topic:** `GROUP BY — COUNT`
 
