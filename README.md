@@ -178,22 +178,22 @@ order by order_date;
 
 ### Challenge A : ลูกค้า VIP ที่สั่งของในช่วงปลายปี 1997
 
-**Topic:** `WHERE · DISTINCT · LIKE · BETWEEN`
+**Level:** `Basic — Combined` &nbsp;|&nbsp; **Topic:** `WHERE · DISTINCT · LIKE · BETWEEN`
 
 **Scenario:**
 
-ฝ่ายขายต้องการจัดทำรายงาน **"ลูกค้าที่น่าสนใจ"** ในช่วงโค้งสุดท้ายของปี 1997
-โดยมีเงื่อนไขทั้งหมดดังนี้
+ฝ่ายขายต้องการรายชื่อ **customer_id ที่ไม่ซ้ำกัน** ของลูกค้าที่ตรงเงื่อนไขทั้งหมด
 
-1. เป็นช่วง **ไตรมาส 4 ของปี 1997** (1 ตุลาคม – 31 ธันวาคม 1997)
-2. ลูกค้ามาจาก **ประเทศในกลุ่ม Americas** ได้แก่ USA, Canada, Brazil, Mexico, Argentina, Venezuela
-3. ชื่อบริษัท (**company_name**) ต้องมีคำว่า `'the'` หรือขึ้นต้นด้วยตัว `'A'` (เช็กแบบ case-insensitive)
-4. แสดงเฉพาะ **customer_id ที่ไม่ซ้ำกัน** พร้อม company_name และ country
+1. `customer_id` ขึ้นต้นด้วยตัวอักษร **'A'** หรือ **'E'**
+2. `country` อยู่ในกลุ่ม Americas (**USA, Canada, Brazil, Mexico, Argentina, Venezuela**)
+3. `customer_id` อยู่ในช่วงตัวอักษร **'AA' ถึง 'QZ'** (BETWEEN บน string)
+
+> ⚠️ ข้อนี้ใช้เฉพาะตาราง `customers` ตารางเดียว ยังไม่ต้อง JOIN
 
 **Task:**
 
-แสดง `customer_id`, `company_name` และ `country` ของลูกค้าที่ตรงเงื่อนไขทั้งหมด
-เรียงตาม `country` ก่อน แล้วตาม `company_name`
+แสดง `customer_id`, `company_name` และ `country`
+ของลูกค้าที่ตรงเงื่อนไขทั้งหมด เรียงตาม `country` แล้วตาม `customer_id`
 
 **Sample Data:**
 
@@ -201,33 +201,24 @@ order by order_date;
 
 | customer_id | company_name | country |
 | --- | --- | --- |
-| ALFKI | Alfreds Futterkiste | Germany |
 | ANATR | Ana Trujillo Emparedados | Mexico |
-| THEBI | The Big Cheese | USA |
-| RANCH | Rancho grande | Argentina |
-| OLDWO | Old World Delicatessen | USA |
-| GREAL | Great Lakes Food Market | USA |
-
-*Table: `orders`*
-
-| order_id | customer_id | order_date |
-| --- | --- | --- |
-| 10869 | THEBI | 1997-02-04 |
-| 10948 | GREAL | 1997-11-19 |
-| 10827 | THEBI | 1997-12-06 |
-| 10960 | RANCH | 1997-10-03 |
-| 10977 | ANATR | 1997-03-15 |
-| 10987 | OLDWO | 1997-12-20 |
+| ANTON | Antonio Moreno Taquería | Mexico |
+| EASTC | Eastern Connection | UK |
+| ERNSH | Ernst Handel | Austria |
+| AROUT | Around the Horn | UK |
+| QUEEN | Queen Cozinha | Brazil |
 
 **Expected Output:**
 
 | customer_id | company_name | country |
 | --- | --- | --- |
-| RANCH | Rancho grande | Argentina |
-| GREAL | Great Lakes Food Market | USA |
-| THEBI | The Big Cheese | USA |
+| QUEEN | Queen Cozinha | Brazil |
+| ANATR | Ana Trujillo Emparedados | Mexico |
+| ANTON | Antonio Moreno Taquería | Mexico |
 
-> หมายเหตุ: OLDWO ตกรอบเพราะชื่อไม่ขึ้นต้นด้วย A และไม่มีคำว่า 'the' · ANATR ตกรอบเพราะ order_date ไม่อยู่ใน Q4
+> EASTC ตกรอบ — country = UK ไม่อยู่ใน Americas
+> ERNSH ตกรอบ — ขึ้นต้นด้วย E แต่ country = Austria
+> AROUT ตกรอบ — ขึ้นต้นด้วย A แต่ country = UK
 
 ---
 
@@ -373,28 +364,24 @@ order by customer_id;
 
 ---
 
-### Challenge B : ตาราง Freight Summary รายไตรมาส ต่อพนักงาน
+### Challenge B : สรุประดับ Freight ต่อพนักงาน
 
-**Topic:** `UPPER · CASE WHEN · COALESCE`
+**Level:** `Intermediate — Combined` &nbsp;|&nbsp; **Topic:** `UPPER · CASE WHEN · COALESCE`
 
 **Scenario:**
 
-ผู้จัดการต้องการ **cross table** สรุปค่า freight รายไตรมาส ของแต่ละพนักงาน
-โดยมีรูปแบบตาราง ดังนี้
+ฝ่าย logistics ต้องการรายงาน order แต่ละใบพร้อม metadata ดังนี้
 
-- **แกนตั้ง (rows):** ปี + ชื่อพนักงาน (ตัวพิมพ์ใหญ่)
-- **แกนนอน (columns):** Q1 · Q2 · Q3 · Q4 (ค่า freight รวมต่อไตรมาส)
-- ถ้าพนักงานไม่มี order ในไตรมาสนั้น ให้แสดง `0.00` แทน NULL
+1. **ชื่อพนักงาน** ในรูปแบบ `"LASTNAME, Firstname"` (นามสกุลตัวพิมพ์ใหญ่ + ลูกน้ำ + ชื่อจริง)
+2. **ระดับ freight** แบ่งเป็น Low / Medium / High (< 50 / 50–200 / > 200)
+3. **ship_region** — ถ้าเป็น NULL ให้แสดง `'Unspecified'`
+
+> ⚠️ ข้อนี้ใช้เฉพาะตาราง `orders` และ `employees` — ใช้ JOIN ได้เพราะ Challenge D สอนแล้ว แต่ solution หลักอยู่ที่ String + CASE + COALESCE
 
 **Task:**
 
-แสดง `order_year`, `employee_name` (UPPER ของ first_name + ' ' + last_name),
-`q1_freight`, `q2_freight`, `q3_freight`, `q4_freight`
-
-โดยแต่ละ column คือ **SUM ของ freight** ของ order ในไตรมาสนั้น
-(ROUND 2 ตำแหน่ง, แสดง 0.00 เมื่อไม่มี order)
-
-เรียงตาม `order_year` แล้วตาม `employee_name`
+แสดง `employee_label`, `order_id`, `freight`, `freight_level` และ `ship_region`
+เรียงตาม `employee_label` แล้วตาม `freight` จากมากไปน้อย
 
 **Sample Data:**
 
@@ -404,31 +391,26 @@ order by customer_id;
 | --- | --- | --- |
 | 1 | Nancy | Davolio |
 | 2 | Andrew | Fuller |
-| 3 | Janet | Leverling |
 
-*Table: `orders` (ตัวอย่างบางส่วน)*
+*Table: `orders`*
 
-| order_id | employee_id | order_date | freight |
+| order_id | employee_id | freight | ship_region |
 | --- | --- | --- | --- |
-| 10258 | 1 | 1996-07-17 | 140.51 |
-| 10270 | 1 | 1996-08-01 | 136.54 |
-| 10295 | 2 | 1996-09-02 | 1.15 |
-| 10400 | 1 | 1997-01-01 | 83.93 |
-| 10410 | 3 | 1997-01-14 | 2.40 |
-| 10440 | 4 | 1997-02-10 | 86.31 |
-| 10500 | 1 | 1997-04-12 | 42.68 |
-| 10512 | 3 | 1997-10-21 | 3.53 |
+| 10258 | 1 | 140.51 | NULL |
+| 10270 | 1 | 136.54 | NULL |
+| 10295 | 2 | 1.15 | OR |
+| 10372 | 1 | 890.78 | NULL |
+| 10515 | 2 | 204.47 | WA |
 
-**Expected Output** (บางส่วน — ปี 1997):
+**Expected Output:**
 
-| order_year | employee_name | q1_freight | q2_freight | q3_freight | q4_freight |
-| --- | --- | --- | --- | --- | --- |
-| 1997 | ANDREW FULLER | 41.72 | 292.43 | 382.11 | 130.22 |
-| 1997 | JANET LEVERLING | 2.40 | 418.57 | 124.33 | 240.95 |
-| 1997 | NANCY DAVOLIO | 187.83 | 150.49 | 230.18 | 101.27 |
-| ... | ... | ... | ... | ... | ... |
-
-> Q1 = Jan–Mar · Q2 = Apr–Jun · Q3 = Jul–Sep · Q4 = Oct–Dec
+| employee_label | order_id | freight | freight_level | ship_region |
+| --- | --- | --- | --- | --- |
+| DAVOLIO, Nancy | 10372 | 890.78 | High | Unspecified |
+| DAVOLIO, Nancy | 10258 | 140.51 | Medium | Unspecified |
+| DAVOLIO, Nancy | 10270 | 136.54 | Medium | Unspecified |
+| FULLER, Andrew | 10515 | 204.47 | High | WA |
+| FULLER, Andrew | 10295 | 1.15 | Low | OR |
 
 ---
 
@@ -531,7 +513,7 @@ offset 10;
 
 ### Challenge C : ระบบค้นหาสินค้าราคาแพง — หน้าที่ 2
 
-**Topic:** `ORDER BY · LIMIT · OFFSET`
+**Level:** `Basic — Combined` &nbsp;|&nbsp; **Topic:** `ORDER BY · LIMIT · OFFSET`
 
 **Scenario:**
 
@@ -575,7 +557,6 @@ offset 10;
 | Rössle Sauerkraut | 45.60 |
 
 ---
-
 
 ### Q10 : รายการสินค้าพร้อมชื่อ Category
 **Topic:** `JOIN — INNER JOIN`
@@ -744,62 +725,62 @@ order by o.order_date desc;
 
 ---
 
-### Challenge D : รายงานพนักงาน — ยอดขาย vs ลูกค้าที่ดูแล
+### Challenge D : รายการ Order ที่ยังไม่มีข้อมูล Shipper ครบ
 
-**Topic:** `INNER JOIN · LEFT JOIN · Multiple JOINs`
+**Level:** `Intermediate — Combined` &nbsp;|&nbsp; **Topic:** `INNER JOIN · LEFT JOIN · Multiple JOINs`
 
 **Scenario:**
 
-ฝ่าย HR ต้องการรายงาน **"ภาพรวมพนักงาน"** ที่รวมข้อมูล 3 มิติเข้าด้วยกัน
-
-1. **ชื่อพนักงาน** และ **ชื่อผู้จัดการ** ของพนักงานคนนั้น (self-reference — พนักงานบางคนไม่มีผู้จัดการ)
-2. **จำนวน order** ที่พนักงานคนนั้นรับ
-3. **จำนวนลูกค้า (unique)** ที่พนักงานคนนั้นเคยดูแล
-
-โดยต้องแสดง **พนักงานทุกคน** แม้ยังไม่เคยรับ order เลย
+ฝ่าย logistics ต้องการตรวจสอบ order ทุกใบในปี 1997
+โดยต้องการเห็น **ชื่อลูกค้า**, **ชื่อพนักงาน** และ **ชื่อบริษัทขนส่ง**
+แต่บาง order **ยังไม่ได้กำหนดบริษัทขนส่ง** (ship_via เป็น NULL) ให้แสดง `'Unassigned'` แทน
 
 **Task:**
 
-แสดง `employee_name` (first + last), `manager_name` (first + last ของผู้จัดการ — ถ้าไม่มีให้แสดง `'No Manager'`),
-`order_count` และ `customer_count`
+แสดง `order_id`, `order_date`, `company_name` (ลูกค้า),
+`employee_name` (first + last ของพนักงาน) และ `shipper_name` (ชื่อบริษัทขนส่ง หรือ 'Unassigned')
 
-เรียงตาม `order_count` จากมากไปน้อย
+กรองเฉพาะ order ในปี 1997 เรียงตาม `order_date`, `order_id`
 
 **Sample Data:**
 
-*Table: `employees`*
-
-| employee_id | first_name | last_name | reports_to |
-| --- | --- | --- | --- |
-| 1 | Nancy | Davolio | 2 |
-| 2 | Andrew | Fuller | NULL |
-| 3 | Janet | Leverling | 2 |
-| 4 | Margaret | Peacock | 2 |
-| 5 | Steven | Buchanan | 2 |
-
 *Table: `orders`*
 
-| order_id | employee_id | customer_id |
+| order_id | customer_id | employee_id | ship_via | order_date |
+| --- | --- | --- | --- | --- |
+| 10400 | ERNSH | 1 | 3 | 1997-01-01 |
+| 10401 | HANAR | 1 | 1 | 1997-01-01 |
+| 10410 | BOTM | 3 | NULL | 1997-01-14 |
+
+*Table: `customers`*
+
+| customer_id | company_name |
+| --- | --- |
+| ERNSH | Ernst Handel |
+| HANAR | Hanari Carnes |
+| BOTM | Bottom-Dollar Markets |
+
+*Table: `employees`*
+
+| employee_id | first_name | last_name |
 | --- | --- | --- |
-| 10248 | 5 | VINET |
-| 10249 | 6 | TOMSP |
-| 10250 | 4 | HANAR |
-| 10251 | 3 | VICTE |
-| 10252 | 4 | SUPRD |
-| 10253 | 3 | HANAR |
+| 1 | Nancy | Davolio |
+| 3 | Janet | Leverling |
+
+*Table: `shippers`*
+
+| shipper_id | company_name |
+| --- | --- |
+| 1 | Speedy Express |
+| 3 | Federal Shipping |
 
 **Expected Output:**
 
-| employee_name | manager_name | order_count | customer_count |
-| --- | --- | --- | --- |
-| Janet Leverling | Andrew Fuller | 127 | 89 |
-| Margaret Peacock | Andrew Fuller | 156 | 110 |
-| Nancy Davolio | Andrew Fuller | 123 | 88 |
-| Andrew Fuller | No Manager | 96 | 76 |
-| Steven Buchanan | Andrew Fuller | 42 | 35 |
-| ... | ... | ... | ... |
-
-> หมายเหตุ: ตัวเลขในตัวอย่างเป็นค่าสมมติเพื่ออธิบาย shape — ค่าจริงขึ้นกับ database
+| order_id | order_date | company_name | employee_name | shipper_name |
+| --- | --- | --- | --- | --- |
+| 10400 | 1997-01-01 | Ernst Handel | Nancy Davolio | Federal Shipping |
+| 10401 | 1997-01-01 | Hanari Carnes | Nancy Davolio | Speedy Express |
+| 10410 | 1997-01-14 | Bottom-Dollar Markets | Janet Leverling | Unassigned |
 
 ---
 
@@ -978,7 +959,7 @@ order by pc.product_count desc;
 
 ### Challenge E : สินค้าขายดี เฉพาะ Category ที่ Active จริง ๆ
 
-**Topic:** `WHERE IN · Scalar Subquery · FROM clause`
+**Level:** `Intermediate — Combined` &nbsp;|&nbsp; **Topic:** `WHERE IN · Scalar Subquery · FROM clause`
 
 **Scenario:**
 
@@ -1030,14 +1011,14 @@ order by pc.product_count desc;
 
 | category_name | product_count | เทียบกับค่าเฉลี่ย (~9.6) |
 | --- | --- | --- |
-| Confections | 13 | มากกว่า |
-| Beverages | 12 | มากกว่า |
-| Condiments | 12 | มากกว่า |
-| Seafood | 12 | มากกว่า |
-| Dairy Products | 10 | มากกว่า |
-| Meat/Poultry | 6 | น้อยกว่า |
-| Produce | 5 | น้อยกว่า |
-| Grains/Cereals | 7 | น้อยกว่า |
+| Confections | 13 |  มากกว่า |
+| Beverages | 12 |  มากกว่า |
+| Condiments | 12 |  มากกว่า |
+| Seafood | 12 |  มากกว่า |
+| Dairy Products | 10 |  มากกว่า |
+| Meat/Poultry | 6 |  น้อยกว่า |
+| Produce | 5 |  น้อยกว่า |
+| Grains/Cereals | 7 |  น้อยกว่า |
 
 **Expected Output** (บางส่วน):
 
@@ -1276,33 +1257,25 @@ order by full_name, month;
 
 ---
 
-### Challenge F : Leaderboard พนักงานประจำปี
+### Challenge F : สรุปยอดขายต่อพนักงาน ต่อ Category ปี 1997
 
 **Level:** `Advanced — Combined` &nbsp;|&nbsp; **Topic:** `COUNT · SUM · AVG · HAVING · Multi-column GROUP BY`
 
 **Scenario:**
 
-ผู้บริหารต้องการ **"Employee Leaderboard"** ประจำปี 1997
-ที่รวมทุก metric ไว้ในตารางเดียว เพื่อประกอบการพิจารณาโบนัส
-
-โดยต้องการเห็น **ทุก metric** ต่อไปนี้ต่อพนักงาน 1 คน:
-
-| Column | ความหมาย |
-| --- | --- |
-| `full_name` | ชื่อ + นามสกุลพนักงาน |
-| `order_count` | จำนวน order ที่รับในปี 1997 |
-| `total_revenue` | ยอดขายรวม (revenue formula) |
-| `avg_order_revenue` | ยอดขายเฉลี่ยต่อ order |
-| `avg_freight` | ค่าขนส่งเฉลี่ยต่อ order |
-| `best_month` | เดือนที่มียอดขายสูงสุด (1–12) |
-
-และแสดง **เฉพาะพนักงานที่มี order_count ≥ 70** ในปีนั้น
-เรียงตาม `total_revenue` จากมากไปน้อย
+ผู้บริหารต้องการรายงานว่า **พนักงานแต่ละคน** ขายสินค้าใน **category ไหนได้เท่าไหร่** ในปี 1997
+โดยต้องการเห็นเฉพาะ **คู่ employee–category ที่มียอดขายสูงกว่าค่าเฉลี่ยของทุกคู่**
 
 **Task:**
 
-แสดง `full_name`, `order_count`, `total_revenue`, `avg_order_revenue`, `avg_freight` และ `best_month`
-ของพนักงานที่มี order_count ≥ 70 ในปี 1997 เรียงตาม `total_revenue` desc
+แสดง `employee_name` (first + last), `category_name`,
+`order_count` (จำนวน order ใบที่มีสินค้า category นั้น),
+`total_revenue` (SUM revenue) และ `avg_revenue` (AVG revenue ต่อ order)
+
+กรองเฉพาะ **คู่ที่มี total_revenue สูงกว่าค่าเฉลี่ย total_revenue ของทุกคู่**
+(ใช้ scalar subquery ใน HAVING — ความรู้จาก Challenge E)
+
+เรียงตาม `total_revenue` จากมากไปน้อย
 
 **Sample Data:**
 
@@ -1312,35 +1285,43 @@ order by full_name, month;
 | --- | --- | --- |
 | 1 | Nancy | Davolio |
 | 2 | Andrew | Fuller |
-| 3 | Janet | Leverling |
-| 4 | Margaret | Peacock |
 
 *Table: `orders`*
 
-| order_id | employee_id | order_date | freight |
-| --- | --- | --- | --- |
-| 10400 | 1 | 1997-01-01 | 83.93 |
-| 10410 | 3 | 1997-01-14 | 2.40 |
-| 10420 | 4 | 1997-02-03 | 44.12 |
-| 10500 | 1 | 1997-04-12 | 42.68 |
-| ... | ... | ... | ... |
+| order_id | employee_id | order_date |
+| --- | --- | --- |
+| 10400 | 1 | 1997-01-01 |
+| 10401 | 2 | 1997-01-01 |
 
 *Table: `order_details`*
 
 | order_id | product_id | quantity | unit_price | discount |
 | --- | --- | --- | --- | --- |
 | 10400 | 1 | 12 | 18.00 | 0.0 |
-| 10400 | 22 | 20 | 21.00 | 0.0 |
-| 10410 | 33 | 49 | 2.00 | 0.0 |
-| ... | ... | ... | ... | ... |
+| 10401 | 11 | 20 | 21.00 | 0.0 |
+
+*Table: `products`*
+
+| product_id | category_id |
+| --- | --- |
+| 1 | 1 |
+| 11 | 4 |
+
+*Table: `categories`*
+
+| category_id | category_name |
+| --- | --- |
+| 1 | Beverages |
+| 4 | Dairy Products |
 
 **Expected Output** (ค่าสมมติ):
 
-| full_name | order_count | total_revenue | avg_order_revenue | avg_freight | best_month |
-| --- | --- | --- | --- | --- | --- |
-| Margaret Peacock | 81 | 232890.85 | 2875.19 | 78.34 | 4 |
-| Janet Leverling | 71 | 198390.71 | 2794.94 | 68.12 | 3 |
-| Nancy Davolio | 73 | 192107.72 | 2631.61 | 62.77 | 9 |
+| employee_name | category_name | order_count | total_revenue | avg_revenue |
+| --- | --- | --- | --- | --- |
+| Margaret Peacock | Dairy Products | 38 | 45230.50 | 1190.28 |
+| Janet Leverling | Beverages | 29 | 38120.75 | 1314.51 |
+| Nancy Davolio | Confections | 27 | 31450.20 | 1164.82 |
+| ... | ... | ... | ... | ... |
 
 > หมายเหตุ: ตัวเลขเป็นค่าสมมติ — ค่าจริงขึ้นกับ database
 
