@@ -188,8 +188,6 @@ order by order_date;
 2. `country` อยู่ในกลุ่ม Americas (**USA, Canada, Brazil, Mexico, Argentina, Venezuela**)
 3. `customer_id` อยู่ในช่วงตัวอักษร **'AA' ถึง 'QZ'** (BETWEEN บน string)
 
-> ⚠️ ข้อนี้ใช้เฉพาะตาราง `customers` ตารางเดียว ยังไม่ต้อง JOIN
-
 **Task:**
 
 แสดง `customer_id`, `company_name` และ `country`
