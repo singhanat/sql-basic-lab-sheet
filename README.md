@@ -1511,3 +1511,50 @@ Having sum(od.quantity * od.unit_price * (1 - discount)) > (
 | ... | ... | ... | ... | ... | ... |
 
 > หมายเหตุ: ตัวเลขในตัวอย่างเป็นค่าสมมติ — ค่าจริงขึ้นกับ database
+
+```
+SELECT
+	EXTRACT(YEAR FROM o.order_date) as order_year,
+	UPPER(CONCAT(e.first_name ,' ', e.last_name)) as employee_name,
+	
+	ROUND(
+		COALESCE(
+			SUM(
+				CASE 
+					WHEN EXTRACT(MONTH FROM o.order_date) BETWEEN 1 AND 3 
+					THEN o.freight 
+				END), 
+		0.0)::numeric, 2) 
+	as q1_freight,
+	
+	ROUND(
+		COALESCE(
+			SUM(
+				CASE 
+					WHEN EXTRACT(MONTH FROM o.order_date) BETWEEN 4 AND 6 
+					THEN o.freight 
+				END), 
+		0.0)::numeric, 2) 
+	 as q2_freight,
+	ROUND(
+		COALESCE(
+			SUM(
+				CASE 
+					WHEN EXTRACT(MONTH FROM o.order_date) BETWEEN 7 AND 9 
+					THEN o.freight 
+				END), 
+		0.0)::numeric, 2) 
+	 as q3_freight,
+	ROUND(
+			COALESCE(
+				SUM(
+					CASE 
+						WHEN EXTRACT(MONTH FROM o.order_date) BETWEEN 10 AND 12
+						THEN o.freight 
+					END), 
+			0.0)::numeric, 2) 
+	 as q4_freight
+FROM employees e
+JOIN orders o ON e.employee_id = o.employee_id
+GROUP BY EXTRACT(YEAR FROM o.order_date), e.first_name, e.last_name, e.employee_id
+```
