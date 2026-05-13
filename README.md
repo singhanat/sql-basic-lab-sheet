@@ -453,6 +453,19 @@ order by customer_id;
 | FULLER, Andrew | 10515 | 204.47 | High | WA |
 | FULLER, Andrew | 10295 | 1.15 | Low | OR |
 
+
+```
+SELECT CONCAT(UPPER(e.last_name), ', ', e.first_name) AS employee_label,
+	CASE
+		WHEN freight < 50 THEN 'Low'
+		WHEN freight BETWEEN 50 AND 200 THEN 'Medium'
+		ELSE 'High'
+	END AS freight_level,
+	COALESCE(o.ship_region, 'Unspecified') AS ship_region
+FROM orders o
+JOIN employees e ON o.employee_id = e.employee_id
+```
+
 ---
 
 ### Q8 : Top 5 สินค้าราคาแพงสุด
