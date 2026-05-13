@@ -1101,6 +1101,39 @@ order by pc.product_count desc;
 
 > หมายเหตุ: ตัวเลขในตัวอย่างเป็นค่าสมมติเพื่ออธิบาย shape — ค่าจริงขึ้นกับ database
 
+```
+
+SELECT p.product_name, 
+	c.category_name,
+	p.unit_price,
+	od_count.times_ordered
+FROM products p
+JOIN categories c ON p.category_id = c.category_id
+JOIN (
+	SELECT product_id, count(*) as times_ordered
+	FROM order_details
+	group by product_id
+) od_count ON p.product_id = od_count.product_id
+WHERE p.product_id IN (
+	select distinct product_id from order_details
+)
+AND p.category_id IN (
+
+	SELECT pc.category_id
+	FROM (
+		SELECT category_id, count(*) as product_count
+		FROM products
+		group by category_id
+	) pc 
+	WHERE pc.product_count > (
+		SELECT AVG(product_count) FROM (
+			SELECT category_id, count(*) as product_count
+			FROM products
+			group by category_id
+		)
+	)
+)
+```
 ---
 
 ### Q16 : จำนวน Order ต่อลูกค้า
