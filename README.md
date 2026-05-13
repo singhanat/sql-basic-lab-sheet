@@ -255,6 +255,14 @@ order by order_date;
 > ERNSH ตกรอบ — ขึ้นต้นด้วย E แต่ country = Austria
 > AROUT ตกรอบ — ขึ้นต้นด้วย A แต่ country = UK
 
+```
+SELECT customer_id, company_name, country
+FROM customers
+WHERE (customer_id LIKE 'A%' OR customer_id LIKE 'E%')
+AND country IN ('USA', 'Canada', 'Brazil', 'Mexico', 'Argentina', 'Venezuela')
+AND customer_id BETWEEN 'AA' AND 'QZ'
+```
+
 ---
 
 ### Q05 : ชื่อพนักงานตัวพิมพ์ใหญ่
