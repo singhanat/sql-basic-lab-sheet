@@ -1,5 +1,42 @@
 # SQL Basic Exam — Northwind Dataset
 
+## PG4ADMIN
+
+URL: http://pgadmin4.datacaster.org/
+
+Username
+```
+user_XXX@datacaster.org
+```
+XXX แทนด้วยลำดับของท่านที่ได้รับจาก TA
+
+Password
+```
+strange_stoic_shannon
+```
+
+## การเพิ่ม PostgreSQL Database 
+
+Username
+```
+dbuser
+```
+
+Password
+```
+tenacious_trusting_torvalds
+```
+
+![setup_1](img/setup_1.png)
+
+![setup_1](img/setup_2.png)
+
+![setup_1](img/setup_3.png)
+
+## Data set
+![ER](img/ER.png)
+
+
 ---
 
 ### Q01 : สินค้าที่หมดสต็อก
