@@ -1361,7 +1361,7 @@ order by full_name, month;
 
 ### Challenge G : ตาราง Freight Summary รายไตรมาส ต่อพนักงาน
 
-**Level:** `Advanced — Combined` &nbsp;|&nbsp; **Topic:** `UPPER · CASE WHEN · COALESCE · GROUP BY · EXTRACT`
+**Topic:** `UPPER · CASE WHEN · COALESCE · GROUP BY · EXTRACT`
 
 **Scenario:**
 
