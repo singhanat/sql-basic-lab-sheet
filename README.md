@@ -1426,6 +1426,32 @@ order by full_name, month;
 
 > หมายเหตุ: ตัวเลขเป็นค่าสมมติ — ค่าจริงขึ้นกับ database
 
+```
+SELECT 
+	CONCAT(e.first_name, ' ', e.last_name) as employee_name,
+	c.category_name,
+	COUNT(distinct o.order_id) as order_count,
+	ROUND(sum(od.quantity * od.unit_price * (1 - discount))::numeric, 2) as total_revenue,
+	ROUND(Avg(od.quantity * od.unit_price * (1 - discount))::numeric, 2) as avg_revenue
+FROM orders o
+JOIN employees e ON o.employee_id = e.employee_id
+JOIN order_details od ON o.order_id = od.order_id
+JOIN products p ON p.product_id = od.product_id
+JOIN categories c ON p.category_id = c.category_id
+WHERE extract(YEAR from o.order_date) = 1997
+GROUP BY e.first_name, e.last_name, c.category_name, e.employee_id, c.category_id
+Having sum(od.quantity * od.unit_price * (1 - discount)) > (
+	select avg(sub.total_rev)
+	FROM (
+		select sum(od2.quantity * od2.unit_price * (1 - discount)) as total_rev
+		FROM orders o2
+		JOIN order_details od2 ON o2.order_id = od2.order_id
+		JOIN products p2 ON od2.product_id = p2.product_id
+		WHERE extract(YEAR from o2.order_date) = 1997
+		GROUP BY o2.employee_id, p2.category_id
+	) as sub
+)
+```
 ---
 
 ### Challenge G : ตาราง Freight Summary รายไตรมาส ต่อพนักงาน
