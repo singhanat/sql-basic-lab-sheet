@@ -178,7 +178,7 @@ order by order_date;
 
 ### Challenge A : ลูกค้า VIP ที่สั่งของในช่วงปลายปี 1997
 
-**Level:** `Basic — Combined` &nbsp;|&nbsp; **Topic:** `WHERE · DISTINCT · LIKE · BETWEEN`
+**Topic:** `WHERE · DISTINCT · LIKE · BETWEEN`
 
 **Scenario:**
 
@@ -364,7 +364,7 @@ order by customer_id;
 
 ### Challenge B : สรุประดับ Freight ต่อพนักงาน
 
-**Level:** `Intermediate — Combined` &nbsp;|&nbsp; **Topic:** `UPPER · CASE WHEN · COALESCE`
+**Topic:** `UPPER · CASE WHEN · COALESCE`
 
 **Scenario:**
 
@@ -373,8 +373,6 @@ order by customer_id;
 1. **ชื่อพนักงาน** ในรูปแบบ `"LASTNAME, Firstname"` (นามสกุลตัวพิมพ์ใหญ่ + ลูกน้ำ + ชื่อจริง)
 2. **ระดับ freight** แบ่งเป็น Low / Medium / High (< 50 / 50–200 / > 200)
 3. **ship_region** — ถ้าเป็น NULL ให้แสดง `'Unspecified'`
-
-> ⚠️ ข้อนี้ใช้เฉพาะตาราง `orders` และ `employees` — ใช้ JOIN ได้เพราะ Challenge D สอนแล้ว แต่ solution หลักอยู่ที่ String + CASE + COALESCE
 
 **Task:**
 
@@ -511,7 +509,7 @@ offset 10;
 
 ### Challenge C : ระบบค้นหาสินค้าราคาแพง — หน้าที่ 2
 
-**Level:** `Basic — Combined` &nbsp;|&nbsp; **Topic:** `ORDER BY · LIMIT · OFFSET`
+**Topic:** `ORDER BY · LIMIT · OFFSET`
 
 **Scenario:**
 
@@ -725,7 +723,7 @@ order by o.order_date desc;
 
 ### Challenge D : รายการ Order ที่ยังไม่มีข้อมูล Shipper ครบ
 
-**Level:** `Intermediate — Combined` &nbsp;|&nbsp; **Topic:** `INNER JOIN · LEFT JOIN · Multiple JOINs`
+**Topic:** `INNER JOIN · LEFT JOIN · Multiple JOINs`
 
 **Scenario:**
 
@@ -957,7 +955,7 @@ order by pc.product_count desc;
 
 ### Challenge E : สินค้าขายดี เฉพาะ Category ที่ Active จริง ๆ
 
-**Level:** `Intermediate — Combined` &nbsp;|&nbsp; **Topic:** `WHERE IN · Scalar Subquery · FROM clause`
+**Topic:** `WHERE IN · Scalar Subquery · FROM clause`
 
 **Scenario:**
 
@@ -1257,7 +1255,7 @@ order by full_name, month;
 
 ### Challenge F : สรุปยอดขายต่อพนักงาน ต่อ Category ปี 1997
 
-**Level:** `Advanced — Combined` &nbsp;|&nbsp; **Topic:** `COUNT · SUM · AVG · HAVING · Multi-column GROUP BY`
+**Topic:** `COUNT · SUM · AVG · HAVING · Multi-column GROUP BY`
 
 **Scenario:**
 
@@ -1271,7 +1269,6 @@ order by full_name, month;
 `total_revenue` (SUM revenue) และ `avg_revenue` (AVG revenue ต่อ order)
 
 กรองเฉพาะ **คู่ที่มี total_revenue สูงกว่าค่าเฉลี่ย total_revenue ของทุกคู่**
-(ใช้ scalar subquery ใน HAVING — ความรู้จาก Challenge E)
 
 เรียงตาม `total_revenue` จากมากไปน้อย
 
