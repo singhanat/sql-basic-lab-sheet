@@ -836,6 +836,21 @@ order by o.order_date desc;
 | 10401 | 1997-01-01 | Hanari Carnes | Nancy Davolio | Speedy Express |
 | 10410 | 1997-01-14 | Bottom-Dollar Markets | Janet Leverling | Unassigned |
 
+
+```
+SELECT 
+
+	o.order_id,
+	o.order_date,
+	c.company_name,
+	CONCAT(first_name, ' ', last_name) as employee_name,
+	coalesce(s.company_name, 'Unassigned') as shipper_name
+FROM orders o
+join customers c ON o.customer_id = c.customer_id
+JOIN employees e ON o.employee_id = e.employee_id
+JOIN shippers s ON o.ship_via = s.shipper_id
+WHERE o.order_date BETWEEN '1997-01-01' AND '1997-12-31'
+```
 ---
 
 ### Q13 : สินค้าที่เคยถูกสั่งซื้อใน order ของลูกค้า VINET
