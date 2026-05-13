@@ -1358,3 +1358,61 @@ order by full_name, month;
 > หมายเหตุ: ตัวเลขเป็นค่าสมมติ — ค่าจริงขึ้นกับ database
 
 ---
+
+### Challenge G : ตาราง Freight Summary รายไตรมาส ต่อพนักงาน
+
+**Level:** `Advanced — Combined` &nbsp;|&nbsp; **Topic:** `UPPER · CASE WHEN · COALESCE · GROUP BY · EXTRACT`
+
+**Scenario:**
+
+ผู้จัดการต้องการ **cross table** สรุปค่า freight รายไตรมาส ของแต่ละพนักงาน
+โดยมีรูปแบบตาราง ดังนี้
+
+- **แกนตั้ง (rows):** ปี + ชื่อพนักงาน (ตัวพิมพ์ใหญ่)
+- **แกนนอน (columns):** Q1 · Q2 · Q3 · Q4 (ค่า freight รวมต่อไตรมาส)
+- ถ้าพนักงานไม่มี order ในไตรมาสนั้น ให้แสดง `0.00` แทน NULL
+
+> Q1 = Jan–Mar · Q2 = Apr–Jun · Q3 = Jul–Sep · Q4 = Oct–Dec
+
+**Task:**
+
+แสดง `order_year`, `employee_name` (UPPER ของ first_name + ' ' + last_name),
+`q1_freight`, `q2_freight`, `q3_freight`, `q4_freight`
+
+โดยแต่ละ column คือ **SUM ของ freight** ของ order ในไตรมาสนั้น
+(ROUND 2 ตำแหน่ง, แสดง 0.00 เมื่อไม่มี order)
+
+เรียงตาม `order_year` แล้วตาม `employee_name`
+
+**Sample Data:**
+
+*Table: `employees`*
+
+| employee_id | first_name | last_name |
+| --- | --- | --- |
+| 1 | Nancy | Davolio |
+| 2 | Andrew | Fuller |
+| 3 | Janet | Leverling |
+
+*Table: `orders` (ตัวอย่างบางส่วน)*
+
+| order_id | employee_id | order_date | freight |
+| --- | --- | --- | --- |
+| 10258 | 1 | 1996-07-17 | 140.51 |
+| 10270 | 1 | 1996-08-01 | 136.54 |
+| 10295 | 2 | 1996-09-02 | 1.15 |
+| 10400 | 1 | 1997-01-01 | 83.93 |
+| 10410 | 3 | 1997-01-14 | 2.40 |
+| 10500 | 1 | 1997-04-12 | 42.68 |
+| 10512 | 3 | 1997-10-21 | 3.53 |
+
+**Expected Output** (บางส่วน — ปี 1997):
+
+| order_year | employee_name | q1_freight | q2_freight | q3_freight | q4_freight |
+| --- | --- | --- | --- | --- | --- |
+| 1997 | ANDREW FULLER | 41.72 | 292.43 | 382.11 | 130.22 |
+| 1997 | JANET LEVERLING | 2.40 | 418.57 | 124.33 | 240.95 |
+| 1997 | NANCY DAVOLIO | 187.83 | 150.49 | 230.18 | 101.27 |
+| ... | ... | ... | ... | ... | ... |
+
+> หมายเหตุ: ตัวเลขในตัวอย่างเป็นค่าสมมติ — ค่าจริงขึ้นกับ database
